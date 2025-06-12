@@ -24,10 +24,11 @@
      ```
 
 1. **Install Arch**
-   - When asked for "additional packages," refer to `packages.json` and add those packages manually.
+   - Run the official archinstall and complete the steps.
      ```sh
       archinstall
      ```
+   - When asked for "additional packages," refer to `packages.json` and add those packages manually.
      
 2. **Run Post-Install Script**
    - After installation:
