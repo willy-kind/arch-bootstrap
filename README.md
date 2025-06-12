@@ -66,15 +66,9 @@
 
 ---
 
-## 📂 Files
+## Files
 
 - `packages.json` — Package reference
 - `post-install.sh` — Automated post-install setup
 - `flake.nix` — Nix dev shell definition
 - `playbook.yml` — Ansible playbook
-
----
-
-## 💡 Notes
-
-- WiFi is always set up with `iwctl`—no alternatives!
