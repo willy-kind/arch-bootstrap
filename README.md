@@ -66,6 +66,7 @@
 7. **Run Ansible**
    - Run the playbook:
      ```sh
+     cd ansible/
      ansible-playbook -i inventory.ini playbook.yml -K
      ```
 
