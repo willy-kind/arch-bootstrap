@@ -1,0 +1,136 @@
+
+---
+- name: Personal Arch Post-Install
+  hosts: localhost
+  become: true
+
+  vars_prompt:
+    - name: "user"
+      prompt: "Which username should be configured?"
+      private: no
+
+  tasks:
+
+    - name: Update pacman
+      pacman:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install packages
+      pacman:
+        name:
+          - alsa-firmware
+          - alsa-ucm-conf
+          - bash-completion
+          - bluez-utils
+          - brightnessctl
+          - exfat-utils
+          - firefox
+          - ghostty
+          - hypridle
+          - hyprland
+          - hyprlock
+          - hyprpaper
+          - nautilus
+          - neovim
+          - nfs-utils
+          - pamixer
+          - pipewire
+          - pipewire-pulse
+          - qbittorrent
+          - ripgrep
+          - rpi-imager
+          - starship
+          - stow
+          - swaync
+          - tlp
+          - tmux
+          - ttf-jetbrains-mono-nerd
+          - waybar
+          - wl-clipboard
+          - wofi
+        state: present
+
+    - name: Check if paru is installed
+      ansible.builtin.stat:
+        path: /usr/bin/paru
+      register: paru_installed
+    
+    - name: Clone paru AUR helper
+      ansible.builtin.git:
+        repo: "https://aur.archlinux.org/paru.git"
+        dest: "/tmp/paru"
+        update: yes
+      become_user: "{{ user }}"
+      when: paru_installed.stat.exists == False
+
+    - name: Build and install paru
+      ansible.builtin.command:
+        cmd: makepkg -si --noconfirm
+        chdir: /tmp/paru
+      become_user: "{{ user }}"
+      when: paru_installed.stat.exists == False
+
+    - name: Check if paru is installed
+      ansible.builtin.stat:
+        path: /usr/bin/paru
+      register: paru_installed
+
+    - name: Install nordvpn-bin from AUR with paru
+      become_user: "{{ user }}"
+      shell: paru -S --noconfirm nordvpn-bin
+      args:
+        creates: /usr/bin/nordvpn
+
+    - name: Clone dotfiles
+      become_user: "{{ user }}"
+      ansible.builtin.git:
+        repo: "https://github.com/willy-kind/dotfiles.git"
+        dest: "/home/{{ user }}"
+        version: main
+        update: yes
+
+    - name: Stow dotfiles
+      become_user: "{{ user }}"
+      ansible.builtin.command:
+        cmd: stow bash ghostty hyprland k9s nix nvim starship swaync tmux wallpapers waybar wofi
+        chdir: "/home/{{ user }}/dotfiles"
+
+    - name: Enable PipeWire PulseAudio service
+      become_user: "{{ user }}"
+      ansible.builtin.systemd:
+        name: pipewire-pulse.service
+        enabled: true
+        state: started
+        scope: user
+
+    - name: Enable PipeWire service 
+      become_user: "{{ user }}"
+      ansible.builtin.systemd:
+        name: pipewire.service
+        enabled: true
+        state: started
+        scope: user
+
+    - name: Enable WirePlumber service
+      become_user: "{{ user }}"
+      ansible.builtin.systemd:
+        name: wireplumber.service
+        enabled: true
+        state: started
+        scope: user
+
+    - name: Enable Hyprland service
+      become_user: "{{ user }}"
+      ansible.builtin.systemd:
+        name: hyprland.service
+        enabled: true
+        state: started
+        scope: user
+
+    - name: Enable nordvpnd service
+      become: true
+      systemd:
+        name: nordvpnd
+        enabled: true
+        state: started

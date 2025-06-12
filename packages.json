@@ -1,0 +1,13 @@
+{
+  "packages": [
+    "base-devel",
+    "fwupd",
+    "git",
+    "intel-ucode",
+    "iwd",
+    "lvm2",
+    "nix",
+    "openssh",
+    "sof-firmware"
+  ],
+}
