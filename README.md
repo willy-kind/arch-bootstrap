@@ -1,69 +1,64 @@
 # 🚀 Arch Bootstrap
 
-A fast, repeatable way to set up Arch Linux using manual package selection, post-install scripts, Nix, and Ansible.
+> ⚠️ **Personal Setup:**  
+> This repo is my personal Arch Linux bootstrap—feel free to peek, copy, or adapt, but it’s tailored for my preferences and workflow.
 
-## ⚡ Workflow
+---
+
+## ⚡ My Workflow
 
 1. **Install Arch**  
    Use the official installer or Arch install tool.  
-   When asked for "additional packages," open up `packages.json` and manually add those packages.
+   When asked for "additional packages," check `packages.json` and add those packages manually.
 
 2. **Run Post-Install Script**  
-   After installation, run:
+   After installation:
    ```sh
    ./post-install.sh
    ```
 
 3. **Reboot**  
-   Give it a fresh start.
+   Restart the machine.
 
-4. **Connect to WiFi (iwctl)**  
-   After login, get online:
+4. **WiFi (iwctl only)**  
+   After login, connect to Wifi:
    ```sh
    iwctl
    # station <device> scan
    # station <device> get-networks
    # station <device> connect <SSID>
    ```
-   (Replace `<device>` and `<SSID>` with your actual device and network name.)
 
-5. **Enter Nix DevShell**  
-   Set up your trusted dev environment:
+5. **Nix DevShell**  
+   Start the devShell:
    ```sh
-   nix develop
+   nix develop github:willy-kind/arch-bootstrap 
    ```
 
 6. **Clone This Repo**  
-   If you’re not already here:
+   Clone the repo:
    ```sh
    git clone https://github.com/willy-kind/arch-bootstrap.git
    cd arch-bootstrap
    ```
 
 7. **Run Ansible**  
-   Apply your configuration magic:
+   Run the playbook
    ```sh
-   ansible-playbook playbook.yml
+   ansible-playbook -i inventory.ini playbook.yaml -K
    ```
 
 ---
 
 ## 📂 Files
 
-- `packages.json` — Your manual package reference
-- `post-install.sh` — Automates your post-install setup
+- `packages.json` — Package reference
+- `post-install.sh` — Automated post-install setup
 - `flake.nix` — Nix dev shell definition
-- `playbook.yml` — Ansible playbook for system config
+- `playbook.yml` — Ansible playbook
 
 ---
 
-## 💡 Tips
+## 💡 Notes
 
-- Keep `packages.json` up to date with your favorite essentials.
-- Version control your scripts and configs—you’ll thank yourself later!
-- WiFi setup is always via `iwctl` here.
-- Make it your own! 🎨
-
----
-
-Happy bootstrapping! 😄🐧
+- WiFi is always set up with `iwctl`—no alternatives!
