@@ -1,7 +1,7 @@
 # Arch Bootstrap
 
 > ⚠️ **Personal Setup:**  
-> This is how I like to bootstrap my Arch Linux systems.  
+> This is how I like to bootstrap my laptop.  
 
 ---
 
