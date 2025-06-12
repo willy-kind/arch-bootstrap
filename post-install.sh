@@ -1,31 +1,21 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Ensure iwd is installed
-if ! pacman -Q iwd >/dev/null 2>&1; then
-  echo "Installing iwd..."
-  pacman -Sy --noconfirm iwd
-fi
+echo "Enabling iwd, systemd-networkd, and systemd-resolved..."
+systemctl enable --now iwd.service
+systemctl enable --now systemd-networkd.service
+systemctl enable --now systemd-resolved.service
 
-# Enable and start systemd-networkd, systemd-resolved, and iwd
-echo "Enabling and starting systemd-networkd, systemd-resolved, and iwd..."
-systemctl enable --now systemd-networkd
-systemctl enable --now systemd-resolved
-systemctl enable --now iwd
+echo "Linking /etc/resolv.conf to systemd-resolved's stub resolver..."
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
-# Symlink /etc/resolv.conf for systemd-resolved
-echo "Setting up /etc/resolv.conf for systemd-resolved..."
-ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
-
-# Create a systemd-networkd config for wireless interfaces
-cat <<EOF >/etc/systemd/network/25-wireless.network
+echo "Setting up systemd-networkd for WiFi interface: wlan0"
+cat <<EOF > /etc/systemd/network/25-wireless.network
 [Match]
-Type=wlan0
+Name=wlan0
 
 [Network]
 DHCP=yes
 EOF
 
-echo "Setup complete!"
-echo "After reboot, use 'iwctl' to scan and connect to WiFi."
-echo "systemd-networkd will automatically manage the connection and DHCP."
+echo "Setup complete! Use 'iwctl' to connect to WiFi if needed."
