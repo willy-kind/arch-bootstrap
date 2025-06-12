@@ -32,7 +32,7 @@
 2. **Run Post-Install Script**
    - After installation:
      ```sh
-     ./post-install.sh
+     arch-bootstrap/post-install.sh
      ```
 
 3. **Reboot**
