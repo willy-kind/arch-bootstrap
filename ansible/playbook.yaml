@@ -90,7 +90,7 @@
       become_user: "{{ user }}"
       ansible.builtin.git:
         repo: "https://github.com/willy-kind/dotfiles.git"
-        dest: "/home/{{ user }}"
+        dest: "/home/{{ user }}/dotfiles"
         version: main
         update: yes
 
