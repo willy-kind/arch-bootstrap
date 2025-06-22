@@ -13,7 +13,6 @@
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
           ansible
-          git
         ];
         shellHook = ''
           echo "Arch-Bootsrap is up and running 󱓞 "

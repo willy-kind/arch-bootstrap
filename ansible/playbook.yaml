@@ -26,20 +26,24 @@
           - brightnessctl
           - exfat-utils
           - firefox
+          - fwupd
           - ghostty
           - hypridle
           - hyprland
           - hyprlock
           - hyprpaper
+          - intel-ucode
           - nautilus
           - neovim
           - nfs-utils
+          - openssh
           - pamixer
           - pipewire
           - pipewire-pulse
           - qbittorrent
           - ripgrep
           - rpi-imager
+          - sof-firmware
           - starship
           - stow
           - swaync

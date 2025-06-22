@@ -1,15 +1,11 @@
 {
   "packages": [
     "base-devel",
-    "fwupd",
+    "direnv",
     "git",
-    "intel-ucode",
     "iwd",
-    "lvm2",
     "systemd-networkd",
     "systemd-resolved",
-    "nix",
-    "openssh",
-    "sof-firmware"
+    "nix"
   ],
 }
