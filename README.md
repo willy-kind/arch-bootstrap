@@ -60,14 +60,19 @@
   cd arch-bootstrap
   ```
 
-### 5. Run Post-Install Script
+### 5. (Optional) Run Post-Install Script
 
 - Execute the post-install script to set up networking and other essentials:
   ```sh
   ./post-install.sh
   ```
 
-### 6. Run Ansible Playbook
+### 6. Ensure age Key is Present
+   
+- To run the Ansible playbook and decrypt secrets, your **age private key** must be available.
+- Without this key, the playbook will not be able to decrypt and restore your secrets.
+
+### 7. Run Ansible Playbook
 
 - Enter the ansible directory and run the playbook:
   ```sh
