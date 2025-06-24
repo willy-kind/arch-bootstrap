@@ -1,8 +1,10 @@
 {
   "packages": [
+    "age",
     "ansible",
     "git",
     "iwd",
-    "neovim"
+    "neovim",
+    "sops"
   ],
 }
