@@ -96,6 +96,13 @@
       args:
         executable: /bin/bash
 
+    - name: Install tmux plugin manager (TPM)
+      become_user: "{{ user }}"
+      ansible.builtin.git:
+        repo: "https://github.com/tmux-plugins/tpm"
+        dest: "/home/{{ user }}/.tmux/plugins/tpm"
+        update: yes
+
     - name: Clone dotfiles
       become_user: "{{ user }}"
       ansible.builtin.git:
