@@ -24,6 +24,7 @@
           - bash-completion
           - bluez-utils
           - brightnessctl
+          - direnv
           - exfat-utils
           - firefox
           - fwupd
@@ -86,6 +87,15 @@
       args:
         creates: /usr/bin/nordvpn
 
+    - name: Install Nix package manager (multi-user)
+      become_user: "{{ user }}"
+      shell: |
+        if ! command -v nix-env >/dev/null; then
+          sh <(curl -L https://nixos.org/nix/install) --daemon
+        fi
+      args:
+        executable: /bin/bash
+
     - name: Clone dotfiles
       become_user: "{{ user }}"
       ansible.builtin.git:
@@ -93,6 +103,12 @@
         dest: "/home/{{ user }}/dotfiles"
         version: main
         update: yes
+
+    - name: Remove conflicting .bashrc before stow
+      become_user: "{{ user }}"
+      file:
+        path: "/home/{{ user }}/.bashrc"
+        state: absent
 
     - name: Stow dotfiles
       become_user: "{{ user }}"
@@ -138,3 +154,22 @@
         name: nordvpnd
         enabled: true
         state: started
+
+    - name: Enable nix-daemon.service
+      systemd:
+        name: nix-daemon.service
+        enabled: true
+        state: started
+
+    - name: Add user to nix-users group
+      user:
+        name: "{{ user }}"
+        groups: nix-users
+        append: yes
+
+    - name: Ensure nix profile is sourced in .bashrc
+      become_user: "{{ user }}"
+      lineinfile:
+        path: "/home/{{ user }}/.bashrc"
+        line: '. /etc/profile.d/nix.sh'
+        state: present

@@ -1,11 +1,8 @@
 {
   "packages": [
-    "base-devel",
-    "direnv",
+    "ansible",
     "git",
     "iwd",
-    "systemd-networkd",
-    "systemd-resolved",
-    "nix"
+    "neovim"
   ],
 }

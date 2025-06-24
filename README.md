@@ -7,68 +7,79 @@
 
 ## Installation Workflow
 
-0. **Boot & Prepare (Live ISO)**
-   - Boot from the Arch ISO USB.
-   - Connect to WiFi using `iwctl`:
-     ```sh
-     iwctl
-     ```
-   - Install git in the live environment:
-     ```sh
-     pacman -S git
-     ```
-   - Clone this repo so my scripts are available:
-     ```sh
-     git clone https://github.com/willy-kind/arch-bootstrap.git
-     cd arch-bootstrap
-     ```
+### 1. Boot & Connect to WiFi
 
-1. **Install Arch**
-   - Run the official archinstall and complete the steps.
-     ```sh
-      archinstall
-     ```
-   - When asked for "additional packages," refer to `packages.json` and add those packages manually.
-     
-2. **Run Post-Install Script**
-   - After installation:
-     ```sh
-     arch-bootstrap/post-install.sh
-     ```
+- Boot from the Arch ISO USB.
+- Set up WiFi using `iwctl`:
+  ```sh
+  iwctl
+  ```
+  In the `iwctl` prompt:
+  ```
+  device list
+  station <device> scan
+  station <device> get-networks
+  station <device> connect <SSID>
+  ```
+  Replace `<device>` with your wireless interface (e.g., wlan0), and `<SSID>` with your network name.
 
-3. **Reboot**
+### 2. Start Arch Install
 
-4. **Connect to WiFi (iwctl only)**
-   - After logging in, connect to WiFi again:
-     ```sh
-     iwctl
-     ```
+- Run the official installer:
+  ```sh
+  archinstall
+  ```
+- During the installation process:
+  - When asked for "Additional packages," add the packages listed in `packages.json` to the additional packages field.
 
-5. **Start Nix DevShell**
-   - Enter the development shell:
-     ```sh
-     nix develop github:willy-kind/arch-bootstrap
-     ```
+### 3. (Optional) Run Post-Install Script in Chroot Before Reboot
 
-6. **Clone This Repo (If Needed)**
-   - If not already in the repo directory:
-     ```sh
-     git clone https://github.com/willy-kind/arch-bootstrap.git
-     cd arch-bootstrap
-     ```
+- If you want your network and services enabled on first boot, you can run the post-install script in a chroot before rebooting:
+  ```sh
+  arch-chroot /mnt
+  cd /path/to/arch-bootstrap
+  ./post-install.sh
+  exit
+  ```
+- This ensures networking and services will be set up for your new system before your first reboot.
 
-7. **Run Ansible**
-   - Run the playbook:
-     ```sh
-     cd ansible/
-     ansible-playbook -i inventory.ini playbook.yml -K
-     ```
+### 3. Reboot
+
+- Once installation is complete, reboot into your new system:
+  ```sh
+  reboot
+  ```
+
+### 4. Initial Login & Repo Setup
+
+- Log in as your user.
+- Make sure you are connected to the internet (WiFi or ethernet).
+- Clone this repository:
+  ```sh
+  git clone https://github.com/willy-kind/arch-bootstrap.git
+  cd arch-bootstrap
+  ```
+
+### 5. Run Post-Install Script
+
+- Execute the post-install script to set up networking and other essentials:
+  ```sh
+  ./post-install.sh
+  ```
+
+### 6. Run Ansible Playbook
+
+- Enter the ansible directory and run the playbook:
+  ```sh
+  cd ansible/
+  ansible-playbook -i inventory.ini playbook.yaml -K
+  ```
 
 ---
 
 ## Files
 
-- `packages.json` — Package reference
+- `packages.json` — Package reference for additional packages in `archinstall`
 - `post-install.sh` — Automated post-install setup
 - `flake.nix` — Nix dev shell definition
-- `playbook.yml` — Ansible playbook
+- `playbook.yaml` — Ansible playbook
